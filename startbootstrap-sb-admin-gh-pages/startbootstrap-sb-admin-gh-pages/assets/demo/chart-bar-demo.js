@@ -2,52 +2,65 @@
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
-var myAmount1 = 2
-var myAmount2 = 4
+// Function to get cat counts for specific tags
+async function getCatCountsForTags(tags) {
+  const counts = [];
+  for (const tag of tags) {
+    const response = await fetch(`https://cataas.com/api/cats?tags=${tag}`);
+    const data = await response.json();
+    counts.push(data.length); // Number of cats for each tag
+  }
+  return counts;
+}
 
-var myAmountSleep = 6
-var myAmount3 = 8
-var myAmount4 = 10
-var myAmount5 = 12
-// Bar Chart Example
-var ctx = document.getElementById("myBarChart");
-var myLineChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ["January", "February", "SLEEPY", "April", "May", "June"],
-    datasets: [{
-      label: "Revenue",
-      backgroundColor: "rgba(2,117,216,1)",
-      borderColor: "rgba(2,117,216,1)",
-      data: [myAmount1, myAmount2, myAmountSleep, myAmount3, myAmount4, myAmount5],
-    }],
-  },
-  options: {
-    scales: {
-      xAxes: [{
-        time: {
-          unit: 'month'
-        },
-        gridLines: {
-          display: false
-        },
-        ticks: {
-          maxTicksLimit: 6
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          min: 0,
-          max: 20,
-          maxTicksLimit: 5
-        },
-        gridLines: {
-          display: true
-        }
+// Function to update the chart with cat counts
+async function updateChartWithCatCounts() {
+  const tags = ["tired", "cute", "sleepy", "grumpy", "orange", "happy"]; // Sample tags
+  const catCounts = await getCatCountsForTags(tags);
+
+  // Now that we have catCounts, create the chart
+  const ctx = document.getElementById("myBarChart").getContext('2d');
+  var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["TIRED", "CUTE", "SLEEPY", "GRUMPY", "ORANGE", "HAPPY"],
+      datasets: [{
+        label: "Cat Count",
+        backgroundColor: "rgba(2,117,216,1)",
+        borderColor: "rgba(2,117,216,1)",
+        data: catCounts // Use the fetched cat counts
       }],
     },
-    legend: {
-      display: false
+    options: {
+      scales: {
+        xAxes: [{
+          time: {
+            unit: 'month'
+          },
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            maxTicksLimit: 6
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            min: 0,
+            max: Math.max(...catCounts) + 5, // Dynamically set max based on data
+            maxTicksLimit: 5
+          },
+          gridLines: {
+            display: true
+          }
+        }],
+      },
+      legend: {
+        display: false
+      }
     }
-  }
-});
+  });
+}
+
+// Call the function to fetch data and render chart
+updateChartWithCatCounts();
