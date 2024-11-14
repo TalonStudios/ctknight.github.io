@@ -85,10 +85,15 @@
   box-sizing: border-box;
 }
 
+#minAge, #maxAge, #labell{
+  margin-left: 3px;
+  max-width: 150px;
+}
+
 #cat{
   max-width: 50vw; /* Maximum width is 50% of the viewport width */
   max-height: 50vh; /* Maximum height is 50% of the viewport height */
-  width: 250px; /* Maintain aspect ratio */
+  width: 230px; /* Maintain aspect ratio */
   height: 200px; /* Maintain aspect ratio */
 }
 
